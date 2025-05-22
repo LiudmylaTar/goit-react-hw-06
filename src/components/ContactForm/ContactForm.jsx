@@ -11,7 +11,7 @@ export default function ContactForm() {
   // For validation and formatting number
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const formatPhoneNumber = (value) => {
     const digits = value.replace(/\D/g, "");
@@ -22,13 +22,16 @@ export default function ContactForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const newErrors = {};
     // Validation
     if (name.trim().length < 3) {
-      setError("Name must be at least 3 characters");
-      return;
+      newErrors.name = "Name must be at least 3 characters";
     }
     if (number.trim().length < 5) {
-      setError("Number must be at least 5 digits");
+      newErrors.number = "Number must be at least 5 digits";
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
@@ -40,7 +43,7 @@ export default function ContactForm() {
     dispatch(addContact(newContact));
     setName("");
     setNumber("");
-    setError(null);
+    setErrors({});
   };
 
   // formatting number
@@ -59,7 +62,9 @@ export default function ContactForm() {
           id={`${fieldId}-username`}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className={`${css.input} ${errors.name ? css.errorInput : ""}`}
         />
+        {errors.name && <p className={css.error}>{errors.name}</p>}
         <label htmlFor={`${fieldId}-number`}>Number</label>
         <input
           type="tel"
@@ -69,8 +74,9 @@ export default function ContactForm() {
           onChange={handleNumberChange}
           maxLength="9"
           required
+          className={`${css.input} ${errors.number ? css.errorInput : ""}`}
         />
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {errors.number && <p className={css.error}>{errors.number}</p>}
         <button type="submit" className={css.button}>
           Add contact
         </button>

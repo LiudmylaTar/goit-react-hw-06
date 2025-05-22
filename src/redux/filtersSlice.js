@@ -1,17 +1,18 @@
-import { createAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const searchContact = createAction("filters/search");
-const initialState = {
-  name: "",
-};
-export default function filtersReducer(state = initialState, action) {
-  switch (action.type) {
-    case "filters/search":
+export const filterSlice = createSlice({
+  name: "filter",
+  initialState: {
+    name: "",
+  },
+  reducers: {
+    setFilter: (state, action) => {
       return {
         ...state,
         name: action.payload,
       };
-    default:
-      return state;
-  }
-}
+    },
+  },
+});
+export const { setFilter } = filterSlice.actions;
+export default filterSlice.reducer;
